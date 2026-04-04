@@ -302,11 +302,11 @@
       if (e.target.id === 'rewardModal') closeReward();
     });
 
-    // === PWA 安装提示 ===
-    if ('serviceWorker' in navigator) {
+   // PWA Service Worker 注册
+if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/task-app/sw.js')
-      .then(reg => console.log('✅ PWA 已就绪'))
+      .then(reg => console.log('✅ SW 注册成功'))
       .catch(err => console.log('❌ SW 注册失败', err));
   });
 }
