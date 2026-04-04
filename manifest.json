@@ -12,7 +12,8 @@
     {
       "src": "icon.png",
       "sizes": "1279x1279",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
