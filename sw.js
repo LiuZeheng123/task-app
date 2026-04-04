@@ -1,15 +1,13 @@
-const CACHE_NAME = 'daily-planner-v1';
+const CACHE_NAME = 'planner-v1';
 const ASSETS = [
-  '/task-app/',
-  '/task-app/index.html',
-  '/task-app/manifest.json',
-  '/task-app/icon.jpg'
+  './',
+  './index.html',
+  './manifest.json',
+  './icon.jpg'
 ];
 
 self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
-  );
+  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)));
   self.skipWaiting();
 });
 
