@@ -1,8 +1,15 @@
-const CACHE = 'planner-v1';
-const ASSETS = ['/', '/index.html', '/manifest.json'];
+const CACHE_NAME = 'daily-planner-v1';
+const ASSETS = [
+  '/task-app/',
+  '/task-app/index.html',
+  '/task-app/manifest.json',
+  '/task-app/icon.jpg'
+];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
+  e.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+  );
   self.skipWaiting();
 });
 
@@ -12,8 +19,6 @@ self.addEventListener('fetch', e => {
   );
 });
 
-// 通知点击事件
-self.addEventListener('notificationclick', e => {
-  e.notification.close();
-  e.waitUntil(clients.openWindow('/'));
+self.addEventListener('activate', e => {
+  e.waitUntil(clients.claim());
 });
