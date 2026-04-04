@@ -437,6 +437,116 @@
       font-weight: 600;
       margin-bottom: 15px;
     }
+    
+    /* 庆祝弹窗 */
+    .celebration-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .celebration-modal.active {
+      display: flex;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .celebration-content {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 20px;
+      max-width: 400px;
+      width: 100%;
+      overflow: hidden;
+      border: 1px solid rgba(102, 126, 234, 0.3);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      animation: slideUp 0.4s ease;
+    }
+    
+    .celebration-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+    
+    .celebration-text {
+      padding: 25px;
+      text-align: center;
+    }
+    
+    .celebration-quote {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #fff;
+      margin-bottom: 15px;
+      font-style: italic;
+    }
+    
+    .celebration-author {
+      font-size: 14px;
+      color: #667eea;
+      margin-bottom: 20px;
+    }
+    
+    .celebration-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      padding: 12px 30px;
+      border-radius: 25px;
+      color: #fff;
+      font-size: 15px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    
+    .celebration-btn:active {
+      transform: scale(0.95);
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+      from { 
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* 五彩纸屑动画 */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: #667eea;
+      position: absolute;
+      animation: confetti-fall 3s ease-out forwards;
+    }
+    
+    @keyframes confetti-fall {
+      0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -568,7 +678,83 @@
     </div>
   </div>
 
+  <!-- 庆祝弹窗 -->
+  <div class="celebration-modal" id="celebrationModal">
+    <div class="celebration-content">
+      <img class="celebration-image" id="celebrationImage" src="" alt="励志图片">
+      <div class="celebration-text">
+        <div class="celebration-quote" id="celebrationQuote"></div>
+        <div class="celebration-author" id="celebrationAuthor"></div>
+        <button class="celebration-btn" onclick="closeCelebration()">✨ 继续加油</button>
+      </div>
+    </div>
+  </div>
+
   <script>
+    // 文学名言库
+    const literaryQuotes = [
+      {
+        text: "生活不是等待暴风雨过去，而是学会在雨中翩翩起舞。",
+        author: "—— 维维安·格林",
+        image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop"
+      },
+      {
+        text: "每一个不曾起舞的日子，都是对生命的辜负。",
+        author: "—— 尼采",
+        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop"
+      },
+      {
+        text: "当你穿过了暴风雨，你就不再是原来那个人了。",
+        author: "—— 村上春树",
+        image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&h=400&fit=crop"
+      },
+      {
+        text: "世界上只有一种真正的英雄主义，那就是在认清生活的真相后依然热爱生活。",
+        author: "—— 罗曼·罗兰",
+        image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&h=400&fit=crop"
+      },
+      {
+        text: "人不是为失败而生的，一个人可以被毁灭，但不能被打败。",
+        author: "—— 海明威《老人与海》",
+        image: "https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=600&h=400&fit=crop"
+      },
+      {
+        text: "你要做一个不动声色的大人了。不准情绪化，不准偷偷想念，不准回头看。",
+        author: "—— 村上春树",
+        image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop"
+      },
+      {
+        text: "我们终此一生，就是要摆脱他人的期待，找到真正的自己。",
+        author: "—— 伍绮诗《无声告白》",
+        image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&h=400&fit=crop"
+      },
+      {
+        text: "愿你一生努力，一生被爱，想要的都拥有，得不到的都释怀。",
+        author: "—— 八月长安",
+        image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=600&h=400&fit=crop"
+      },
+      {
+        text: "黑夜无论怎样悠长，白昼总会到来。",
+        author: "—— 莎士比亚",
+        image: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=600&h=400&fit=crop"
+      },
+      {
+        text: "所谓无底深渊，下去，也是前程万里。",
+        author: "—— 木心",
+        image: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=600&h=400&fit=crop"
+      },
+      {
+        text: "生活不可能像你想象得那么好，但也不会像你想象得那么糟。",
+        author: "—— 莫泊桑",
+        image: "https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=600&h=400&fit=crop"
+      },
+      {
+        text: "且视他人之疑目如盏盏鬼火，大胆地去走你的夜路。",
+        author: "—— 史铁生",
+        image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&h=400&fit=crop"
+      }
+    ];
+    
     // 全局变量
     let currentDate = new Date();
     let selectedDate = null;
@@ -933,11 +1119,61 @@
         
         if (containerId === 'taskList') {
           loadTodayData();
+          renderStats();
+          
+          // 检查是否所有任务完成
+          const tasks = data[date].tasks;
+          const allCompleted = tasks.length > 0 && tasks.every(t => t.completed);
+          
+          if (allCompleted) {
+            showCelebration();
+          }
         } else {
           loadSelectedDateData();
+          renderCalendar();
+          renderStats();
         }
-        renderStats();
       }
+    }
+    
+    // 显示庆祝弹窗
+    function showCelebration() {
+      const modal = document.getElementById('celebrationModal');
+      const quote = literaryQuotes[Math.floor(Math.random() * literaryQuotes.length)];
+      
+      document.getElementById('celebrationImage').src = quote.image;
+      document.getElementById('celebrationQuote').textContent = quote.text;
+      document.getElementById('celebrationAuthor').textContent = quote.author;
+      
+      modal.classList.add('active');
+      
+      // 创建五彩纸屑效果
+      createConfetti();
+    }
+    
+    // 创建五彩纸屑
+    function createConfetti() {
+      const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe'];
+      
+      for (let i = 0; i < 30; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.style.left = Math.random() * 100 + 'vw';
+          confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+          confetti.style.animationDelay = Math.random() * 0.5 + 's';
+          document.body.appendChild(confetti);
+          
+          setTimeout(() => confetti.remove(), 4000);
+        }, i * 50);
+      }
+    }
+    
+    // 关闭庆祝弹窗
+    function closeCelebration() {
+      const modal = document.getElementById('celebrationModal');
+      modal.classList.remove('active');
     }
     
     // 获取今日字符串
