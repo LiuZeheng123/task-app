@@ -83,7 +83,6 @@
       display: block;
     }
     
-    /* 统计卡片 */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -116,7 +115,6 @@
       color: #888;
     }
     
-    /* 环形图 */
     .chart-container {
       background: rgba(255,255,255,0.05);
       border-radius: 16px;
@@ -160,7 +158,6 @@
       text-anchor: middle;
     }
     
-    /* 热力图 */
     .heatmap-container {
       background: rgba(255,255,255,0.05);
       border-radius: 16px;
@@ -194,7 +191,6 @@
     .heatmap-day.level-3 { background: rgba(102, 126, 234, 0.7); }
     .heatmap-day.level-4 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
     
-    /* 日历样式 */
     .calendar-container {
       display: none;
     }
@@ -288,7 +284,6 @@
       margin-top: 2px;
     }
     
-    /* 输入区域 */
     .current-date {
       background: rgba(102, 126, 234, 0.1);
       border: 1px solid rgba(102, 126, 234, 0.3);
@@ -425,7 +420,6 @@
       font-size: 16px;
     }
     
-    /* 连续打卡 */
     .streak-badge {
       display: inline-flex;
       align-items: center;
@@ -438,7 +432,6 @@
       margin-bottom: 15px;
     }
     
-    /* 庆祝弹窗 */
     .celebration-modal {
       display: none;
       position: fixed;
@@ -527,7 +520,6 @@
       }
     }
     
-    /* 五彩纸屑动画 */
     .confetti {
       position: fixed;
       width: 10px;
@@ -650,7 +642,6 @@
       </div>
     </div>
     
-    <!-- 完成率环形图 -->
     <div class="chart-container">
       <div class="chart-title">本周完成率</div>
       <svg viewBox="0 0 36 36" class="circular-chart">
@@ -671,7 +662,6 @@
       </svg>
     </div>
     
-    <!-- 热力图 -->
     <div class="heatmap-container">
       <div class="heatmap-title">📅 近 35 天活跃度</div>
       <div class="heatmap" id="heatmap"></div>
@@ -690,90 +680,101 @@
     </div>
   </div>
 
+  <!-- 添加自定义名言弹窗 -->
+  <div class="celebration-modal" id="customQuoteModal">
+    <div class="celebration-content" style="max-width: 350px;">
+      <div class="celebration-text">
+        <h3 style="margin-bottom: 20px; color: #667eea;">✨ 添加名言</h3>
+        <div class="input-group" style="margin-bottom: 15px;">
+          <input type="text" id="customQuoteText" placeholder="输入名言内容..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: #fff;">
+        </div>
+        <div class="input-group" style="margin-bottom: 15px;">
+          <input type="text" id="customQuoteAuthor" placeholder="作者（可选）..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: #fff;">
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="celebration-btn" onclick="saveCustomQuote()" style="flex: 1;">保存</button>
+          <button class="celebration-btn" onclick="closeCustomQuoteModal()" style="flex: 1; background: rgba(255,255,255,0.1);">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 悬浮按钮：添加名言 -->
+  <button onclick="openCustomQuoteModal()" style="position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: #fff; font-size: 24px; cursor: pointer; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); display: flex; align-items: center; justify-content: center; z-index: 100;">
+    ✍️
+  </button>
+
   <script>
-    // 文学名言库
+    // 文学名言库（持续扩展中...）
     const literaryQuotes = [
-      {
-        text: "生活不是等待暴风雨过去，而是学会在雨中翩翩起舞。",
-        author: "—— 维维安·格林",
-        image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop"
-      },
-      {
-        text: "每一个不曾起舞的日子，都是对生命的辜负。",
-        author: "—— 尼采",
-        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop"
-      },
-      {
-        text: "当你穿过了暴风雨，你就不再是原来那个人了。",
-        author: "—— 村上春树",
-        image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&h=400&fit=crop"
-      },
-      {
-        text: "世界上只有一种真正的英雄主义，那就是在认清生活的真相后依然热爱生活。",
-        author: "—— 罗曼·罗兰",
-        image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&h=400&fit=crop"
-      },
-      {
-        text: "人不是为失败而生的，一个人可以被毁灭，但不能被打败。",
-        author: "—— 海明威《老人与海》",
-        image: "https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=600&h=400&fit=crop"
-      },
-      {
-        text: "你要做一个不动声色的大人了。不准情绪化，不准偷偷想念，不准回头看。",
-        author: "—— 村上春树",
-        image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop"
-      },
-      {
-        text: "我们终此一生，就是要摆脱他人的期待，找到真正的自己。",
-        author: "—— 伍绮诗《无声告白》",
-        image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&h=400&fit=crop"
-      },
-      {
-        text: "愿你一生努力，一生被爱，想要的都拥有，得不到的都释怀。",
-        author: "—— 八月长安",
-        image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=600&h=400&fit=crop"
-      },
-      {
-        text: "黑夜无论怎样悠长，白昼总会到来。",
-        author: "—— 莎士比亚",
-        image: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=600&h=400&fit=crop"
-      },
-      {
-        text: "所谓无底深渊，下去，也是前程万里。",
-        author: "—— 木心",
-        image: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=600&h=400&fit=crop"
-      },
-      {
-        text: "生活不可能像你想象得那么好，但也不会像你想象得那么糟。",
-        author: "—— 莫泊桑",
-        image: "https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=600&h=400&fit=crop"
-      },
-      {
-        text: "且视他人之疑目如盏盏鬼火，大胆地去走你的夜路。",
-        author: "—— 史铁生",
-        image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&h=400&fit=crop"
-      }
+      { text: "生活不是等待暴风雨过去，而是学会在雨中翩翩起舞。", author: "—— 维维安·格林", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop&q=60" },
+      { text: "每一个不曾起舞的日子，都是对生命的辜负。", author: "—— 尼采", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop&q=60" },
+      { text: "当你穿过了暴风雨，你就不再是原来那个人了。", author: "—— 村上春树", image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=300&fit=crop&q=60" },
+      { text: "世界上只有一种真正的英雄主义，那就是在认清生活的真相后依然热爱生活。", author: "—— 罗曼·罗兰", image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=300&fit=crop&q=60" },
+      { text: "人不是为失败而生的，一个人可以被毁灭，但不能被打败。", author: "—— 海明威", image: "https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=400&h=300&fit=crop&q=60" },
+      { text: "你要做一个不动声色的大人了。不准情绪化，不准偷偷想念，不准回头看。", author: "—— 村上春树", image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop&q=60" },
+      { text: "我们终此一生，就是要摆脱他人的期待，找到真正的自己。", author: "—— 伍绮诗", image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=300&fit=crop&q=60" },
+      { text: "愿你一生努力，一生被爱，想要的都拥有，得不到的都释怀。", author: "—— 八月长安", image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=300&fit=crop&q=60" },
+      { text: "黑夜无论怎样悠长，白昼总会到来。", author: "—— 莎士比亚", image: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=400&h=300&fit=crop&q=60" },
+      { text: "所谓无底深渊，下去，也是前程万里。", author: "—— 木心", image: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=400&h=300&fit=crop&q=60" },
+      { text: "生活不可能像你想象得那么好，但也不会像你想象得那么糟。", author: "—— 莫泊桑", image: "https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=400&h=300&fit=crop&q=60" },
+      { text: "且视他人之疑目如盏盏鬼火，大胆地去走你的夜路。", author: "—— 史铁生", image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400&h=300&fit=crop&q=60" },
+      { text: "我来不及认真地年轻，待明白过来时，只能选择认真地老去。", author: "—— 三毛", image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=300&fit=crop&q=60" },
+      { text: "如果你认识从前的我，那么你就会原谅现在的我。", author: "—— 张爱玲", image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&h=300&fit=crop&q=60" },
+      { text: "于千万人之中遇见你所要遇见的人，于千万年之中，时间的无涯的荒野里。", author: "—— 张爱玲", image: "https://images.unsplash.com/photo-1518621736915-f3b1ffd29c3b?w=400&h=300&fit=crop&q=60" },
+      { text: "人生若只如初见，何事秋风悲画扇。", author: "—— 纳兰性德", image: "https://images.unsplash.com/photo-1499938701117-10c97a78c620?w=400&h=300&fit=crop&q=60" },
+      { text: "曾经沧海难为水，除却巫山不是云。", author: "—— 元稹", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop&q=60" },
+      { text: "两情若是久长时，又岂在朝朝暮暮。", author: "—— 秦观", image: "https://images.unsplash.com/photo-1518621736915-f3b1ffd29c3b?w=400&h=300&fit=crop&q=60" },
+      { text: "衣带渐宽终不悔，为伊消得人憔悴。", author: "—— 柳永", image: "https://images.unsplash.com/photo-1496568816309-51d71e5731b9?w=400&h=300&fit=crop&q=60" },
+      { text: "众里寻他千百度，蓦然回首，那人却在灯火阑珊处。", author: "—— 辛弃疾", image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop&q=60" },
+      { text: "天生我材必有用，千金散尽还复来。", author: "—— 李白", image: "https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=400&h=300&fit=crop&q=60" },
+      { text: "长风破浪会有时，直挂云帆济沧海。", author: "—— 李白", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop&q=60" },
+      { text: "海内存知己，天涯若比邻。", author: "—— 王勃", image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=300&fit=crop&q=60" },
+      { text: "会当凌绝顶，一览众山小。", author: "—— 杜甫", image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=300&fit=crop&q=60" },
+      { text: "采菊东篱下，悠然见南山。", author: "—— 陶渊明", image: "https://images.unsplash.com/photo-1490750967860-bc9254f40e2a?w=400&h=300&fit=crop&q=60" },
+      { text: "山重水复疑无路，柳暗花明又一村。", author: "—— 陆游", image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop&q=60" },
+      { text: "问渠那得清如许，为有源头活水来。", author: "—— 朱熹", image: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=400&h=300&fit=crop&q=60" },
+      { text: "不识庐山真面目，只缘身在此山中。", author: "—— 苏轼", image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=300&fit=crop&q=60" },
+      { text: "欲把西湖比西子，淡妆浓抹总相宜。", author: "—— 苏轼", image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=300&fit=crop&q=60" },
+      { text: "竹杖芒鞋轻胜马，谁怕？一蓑烟雨任平生。", author: "—— 苏轼", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop&q=60" },
+      { text: "人生到处知何似，应似飞鸿踏雪泥。", author: "—— 苏轼", image: "https://images.unsplash.com/photo-1499938701117-10c97a78c620?w=400&h=300&fit=crop&q=60" },
+      { text: "十年生死两茫茫，不思量，自难忘。", author: "—— 苏轼", image: "https://images.unsplash.com/photo-1518621736915-f3b1ffd29c3b?w=400&h=300&fit=crop&q=60" },
+      { text: "此情可待成追忆，只是当时已惘然。", author: "—— 李商隐", image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&h=300&fit=crop&q=60" },
+      { text: "身无彩凤双飞翼，心有灵犀一点通。", author: "—— 李商隐", image: "https://images.unsplash.com/photo-1496568816309-51d71e5731b9?w=400&h=300&fit=crop&q=60" },
+      { text: "春蚕到死丝方尽，蜡炬成灰泪始干。", author: "—— 李商隐", image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop&q=60" },
+      { text: "同是天涯沦落人，相逢何必曾相识。", author: "—— 白居易", image: "https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=400&h=300&fit=crop&q=60" },
+      { text: "在天愿作比翼鸟，在地愿为连理枝。", author: "—— 白居易", image: "https://images.unsplash.com/photo-1518621736915-f3b1ffd29c3b?w=400&h=300&fit=crop&q=60" },
+      { text: "天长地久有时尽，此恨绵绵无绝期。", author: "—— 白居易", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop&q=60" },
+      { text: "路漫漫其修远兮，吾将上下而求索。", author: "—— 屈原", image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=300&fit=crop&q=60" },
+      { text: "亦余心之所善兮，虽九死其犹未悔。", author: "—— 屈原", image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop&q=60" },
+      { text: "生当作人杰，死亦为鬼雄。", author: "—— 李清照", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop&q=60" },
+      { text: "寻寻觅觅，冷冷清清，凄凄惨惨戚戚。", author: "—— 李清照", image: "https://images.unsplash.com/photo-1499938701117-10c97a78c620?w=400&h=300&fit=crop&q=60" },
+      { text: "花自飘零水自流，一种相思，两处闲愁。", author: "—— 李清照", image: "https://images.unsplash.com/photo-1518621736915-f3b1ffd29c3b?w=400&h=300&fit=crop&q=60" },
+      { text: "此情无计可消除，才下眉头，却上心头。", author: "—— 李清照", image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&h=300&fit=crop&q=60" },
+      { text: "知否，知否？应是绿肥红瘦。", author: "—— 李清照", image: "https://images.unsplash.com/photo-1496568816309-51d71e5731b9?w=400&h=300&fit=crop&q=60" },
+      { text: "我见青山多妩媚，料青山见我应如是。", author: "—— 辛弃疾", image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=300&fit=crop&q=60" },
+      { text: "想当年，金戈铁马，气吞万里如虎。", author: "—— 辛弃疾", image: "https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=400&h=300&fit=crop&q=60" },
+      { text: "昨夜西风凋碧树，独上高楼，望尽天涯路。", author: "—— 晏殊", image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop&q=60" },
+      { text: "无可奈何花落去，似曾相识燕归来。", author: "—— 晏殊", image: "https://images.unsplash.com/photo-1490750967860-bc9254f40e2a?w=400&h=300&fit=crop&q=60" },
+      { text: "多情自古伤离别，更那堪冷落清秋节。", author: "—— 柳永", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop&q=60" },
+      { text: "今宵酒醒何处？杨柳岸，晓风残月。", author: "—— 柳永", image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=300&fit=crop&q=60" }
     ];
-    
-    // 全局变量
+
     let currentDate = new Date();
     let selectedDate = null;
     let currentMonth = new Date();
     
-    // 初始化
     document.addEventListener('DOMContentLoaded', function() {
       updateDateDisplay();
       loadTodayData();
       renderCalendar();
       renderStats();
       
-      // 注册 Service Worker
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js');
       }
     });
     
-    // 切换标签
     function switchTab(tab) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -793,18 +794,15 @@
       }
     }
     
-    // 更新日期显示
     function updateDateDisplay() {
       const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
       document.getElementById('currentDateDisplay').textContent = currentDate.toLocaleDateString('zh-CN', options);
     }
     
-    // 渲染统计
     function renderStats() {
       const plans = JSON.parse(localStorage.getItem('plans') || '{}');
       const today = new Date();
       
-      // 计算连续打卡天数
       let streak = 0;
       let checkDate = new Date(today);
       while (true) {
@@ -818,7 +816,6 @@
       }
       document.getElementById('streakDays').textContent = streak;
       
-      // 显示连续打卡徽章
       if (streak > 0) {
         document.getElementById('streakContainer').innerHTML = `
           <div class="streak-badge">
@@ -829,7 +826,6 @@
         document.getElementById('streakContainer').innerHTML = '';
       }
       
-      // 计算总完成任务数
       let totalCompleted = 0;
       Object.values(plans).forEach(day => {
         if (day.tasks) {
@@ -838,17 +834,14 @@
       });
       document.getElementById('totalCompleted').textContent = totalCompleted;
       
-      // 计算本周完成率
       const weekData = getWeekData();
       const weekTotal = weekData.reduce((sum, day) => sum + (day.total || 0), 0);
       const weekCompleted = weekData.reduce((sum, day) => sum + (day.completed || 0), 0);
       const weekPercent = weekTotal === 0 ? 0 : Math.round((weekCompleted / weekTotal) * 100);
       document.getElementById('weekCompletion').textContent = weekPercent + '%';
       
-      // 更新环形图
       updateCircularChart(weekPercent);
       
-      // 计算本月任务数
       const monthStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
       let monthTasks = 0;
       Object.keys(plans).forEach(date => {
@@ -858,11 +851,9 @@
       });
       document.getElementById('monthTasks').textContent = monthTasks;
       
-      // 渲染热力图
       renderHeatmap();
     }
     
-    // 获取本周数据
     function getWeekData() {
       const today = new Date();
       const weekData = [];
@@ -879,7 +870,6 @@
       return weekData;
     }
     
-    // 更新环形图
     function updateCircularChart(percent) {
       const circle = document.getElementById('completionCircle');
       const text = document.getElementById('completionText');
@@ -887,7 +877,6 @@
       text.textContent = `${percent}%`;
     }
     
-    // 渲染热力图
     function renderHeatmap() {
       const heatmap = document.getElementById('heatmap');
       heatmap.innerHTML = '';
@@ -895,7 +884,6 @@
       const plans = JSON.parse(localStorage.getItem('plans') || '{}');
       const today = new Date();
       
-      // 生成近 35 天
       for (let i = 34; i >= 0; i--) {
         const date = new Date(today);
         date.setDate(date.getDate() - i);
@@ -923,12 +911,10 @@
       }
     }
     
-    // 格式化日期
     function formatDate(date) {
       return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     }
     
-    // 渲染日历
     function renderCalendar() {
       const year = currentMonth.getFullYear();
       const month = currentMonth.getMonth();
@@ -978,7 +964,6 @@
       }
     }
     
-    // 选择日期
     function selectDate(dateStr, day) {
       selectedDate = dateStr;
       const dateObj = new Date(dateStr);
@@ -990,20 +975,17 @@
       document.getElementById('selectedDateSection').scrollIntoView({ behavior: 'smooth' });
     }
     
-    // 关闭选择日期
     function closeSelectedDate() {
       document.getElementById('selectedDateSection').style.display = 'none';
       selectedDate = null;
       renderCalendar();
     }
     
-    // 切换月份
     function changeMonth(delta) {
       currentMonth.setMonth(currentMonth.getMonth() + delta);
       renderCalendar();
     }
     
-    // 加载今日数据
     function loadTodayData() {
       const today = getTodayStr();
       const data = JSON.parse(localStorage.getItem('plans') || '{}');
@@ -1013,7 +995,6 @@
       renderTaskList(todayData.tasks || [], 'taskList');
     }
     
-    // 保存心情
     function saveMood() {
       const today = getTodayStr();
       const mood = document.getElementById('todayMood').value;
@@ -1027,7 +1008,6 @@
       localStorage.setItem('plans', JSON.stringify(data));
     }
     
-    // 加载选择日期的数据
     function loadSelectedDateData() {
       if (!selectedDate) return;
       
@@ -1038,7 +1018,6 @@
       renderTaskList(dateData.tasks || [], 'selectedDateTaskList');
     }
     
-    // 保存选择日期的计划
     function saveSelectedDatePlan() {
       if (!selectedDate) return;
       
@@ -1054,7 +1033,6 @@
       renderCalendar();
     }
     
-    // 渲染任务列表
     function renderTaskList(tasks, containerId) {
       const container = document.getElementById(containerId);
       
@@ -1080,7 +1058,6 @@
       `).join('');
     }
     
-    // 添加任务
     function addTask() {
       const input = document.getElementById('taskInput');
       const title = input.value.trim();
@@ -1108,7 +1085,6 @@
       renderStats();
     }
     
-    // 切换任务完成状态
     function toggleTask(index, containerId) {
       const date = containerId === 'taskList' ? getTodayStr() : selectedDate;
       const data = JSON.parse(localStorage.getItem('plans') || '{}');
@@ -1121,7 +1097,6 @@
           loadTodayData();
           renderStats();
           
-          // 检查是否所有任务完成
           const tasks = data[date].tasks;
           const allCompleted = tasks.length > 0 && tasks.every(t => t.completed);
           
@@ -1136,22 +1111,18 @@
       }
     }
     
-    // 显示庆祝弹窗
     function showCelebration() {
       const modal = document.getElementById('celebrationModal');
-      const quote = literaryQuotes[Math.floor(Math.random() * literaryQuotes.length)];
+      const quote = getRandomQuote();
       
       document.getElementById('celebrationImage').src = quote.image;
       document.getElementById('celebrationQuote').textContent = quote.text;
       document.getElementById('celebrationAuthor').textContent = quote.author;
       
       modal.classList.add('active');
-      
-      // 创建五彩纸屑效果
       createConfetti();
     }
     
-    // 创建五彩纸屑
     function createConfetti() {
       const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe'];
       
@@ -1170,19 +1141,56 @@
       }
     }
     
-    // 关闭庆祝弹窗
     function closeCelebration() {
       const modal = document.getElementById('celebrationModal');
       modal.classList.remove('active');
     }
     
-    // 获取今日字符串
+    function saveCustomQuote() {
+      const text = document.getElementById('customQuoteText').value.trim();
+      const author = document.getElementById('customQuoteAuthor').value.trim();
+      
+      if (!text) {
+        alert('请输入名言内容');
+        return;
+      }
+      
+      const savedQuotes = JSON.parse(localStorage.getItem('customQuotes') || '[]');
+      
+      savedQuotes.push({
+        text: text,
+        author: author ? '—— ' + author : '',
+        image: `https://source.unsplash.com/400x300/?nature,landscape,sky&sig=${Date.now()}`
+      });
+      
+      localStorage.setItem('customQuotes', JSON.stringify(savedQuotes));
+      
+      document.getElementById('customQuoteText').value = '';
+      document.getElementById('customQuoteAuthor').value = '';
+      
+      alert('名言已保存！完成任务时会随机显示哦~');
+      closeCustomQuoteModal();
+    }
+    
+    function openCustomQuoteModal() {
+      document.getElementById('customQuoteModal').classList.add('active');
+    }
+    
+    function closeCustomQuoteModal() {
+      document.getElementById('customQuoteModal').classList.remove('active');
+    }
+    
+    function getRandomQuote() {
+      const savedQuotes = JSON.parse(localStorage.getItem('customQuotes') || '[]');
+      const allQuotes = [...literaryQuotes, ...savedQuotes];
+      return allQuotes[Math.floor(Math.random() * allQuotes.length)];
+    }
+    
     function getTodayStr() {
       const now = new Date();
       return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     }
     
-    // 处理回车键
     function handleEnter(event) {
       if (event.key === 'Enter') {
         addTask();
@@ -1214,7 +1222,6 @@
       }
     }
     
-    // HTML 转义
     function escapeHtml(text) {
       const div = document.createElement('div');
       div.textContent = text;
