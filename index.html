@@ -30,7 +30,7 @@
     
     .header {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       padding-top: 20px;
     }
     
@@ -48,24 +48,10 @@
       font-size: 14px;
     }
     
-    .current-date {
-      background: rgba(102, 126, 234, 0.1);
-      border: 1px solid rgba(102, 126, 234, 0.3);
-      border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 25px;
-      text-align: center;
-    }
-    
-    .current-date h2 {
-      font-size: 20px;
-      color: #667eea;
-    }
-    
     .tabs {
       display: flex;
-      gap: 10px;
-      margin-bottom: 25px;
+      gap: 8px;
+      margin-bottom: 20px;
       background: rgba(255,255,255,0.05);
       padding: 5px;
       border-radius: 12px;
@@ -73,11 +59,11 @@
     
     .tab {
       flex: 1;
-      padding: 12px;
+      padding: 10px;
       background: transparent;
       border: none;
       color: #888;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
       border-radius: 8px;
       transition: all 0.3s;
@@ -89,6 +75,126 @@
       font-weight: 600;
     }
     
+    .section {
+      display: none;
+    }
+    
+    .section.active {
+      display: block;
+    }
+    
+    /* 统计卡片 */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .stat-card {
+      background: rgba(255,255,255,0.05);
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .stat-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    
+    .stat-number {
+      font-size: 24px;
+      font-weight: bold;
+      color: #667eea;
+      margin-bottom: 4px;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: #888;
+    }
+    
+    /* 环形图 */
+    .chart-container {
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .chart-title {
+      font-size: 16px;
+      margin-bottom: 15px;
+      color: #667eea;
+      text-align: center;
+    }
+    
+    .circular-chart {
+      display: block;
+      margin: 0 auto;
+      max-width: 200px;
+      max-height: 200px;
+    }
+    
+    .circle-bg {
+      fill: none;
+      stroke: rgba(255,255,255,0.1);
+      stroke-width: 2.5;
+    }
+    
+    .circle {
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      transition: all 0.3s;
+    }
+    
+    .percentage {
+      fill: #fff;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-weight: bold;
+      font-size: 0.5em;
+      text-anchor: middle;
+    }
+    
+    /* 热力图 */
+    .heatmap-container {
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .heatmap-title {
+      font-size: 16px;
+      margin-bottom: 15px;
+      color: #667eea;
+    }
+    
+    .heatmap {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    
+    .heatmap-day {
+      aspect-ratio: 1;
+      border-radius: 4px;
+      background: rgba(102, 126, 234, 0.1);
+      transition: all 0.2s;
+    }
+    
+    .heatmap-day.level-0 { background: rgba(102, 126, 234, 0.1); }
+    .heatmap-day.level-1 { background: rgba(102, 126, 234, 0.3); }
+    .heatmap-day.level-2 { background: rgba(102, 126, 234, 0.5); }
+    .heatmap-day.level-3 { background: rgba(102, 126, 234, 0.7); }
+    .heatmap-day.level-4 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    
+    /* 日历样式 */
     .calendar-container {
       display: none;
     }
@@ -182,20 +288,23 @@
       margin-top: 2px;
     }
     
-    .day.has-plan .day-indicator {
-      background: rgba(255,255,255,0.8);
+    /* 输入区域 */
+    .current-date {
+      background: rgba(102, 126, 234, 0.1);
+      border: 1px solid rgba(102, 126, 234, 0.3);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+      text-align: center;
     }
     
-    .plan-section {
-      display: none;
-    }
-    
-    .plan-section.active {
-      display: block;
+    .current-date h2 {
+      font-size: 20px;
+      color: #667eea;
     }
     
     .input-group {
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
     
     .input-group label {
@@ -208,28 +317,28 @@
     .input-group input,
     .input-group textarea {
       width: 100%;
-      padding: 14px;
+      padding: 12px;
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
+      border-radius: 10px;
       color: #fff;
       font-size: 15px;
       font-family: inherit;
     }
     
     .input-group textarea {
-      min-height: 100px;
+      min-height: 80px;
       resize: vertical;
     }
     
     .btn {
       width: 100%;
-      padding: 15px;
+      padding: 14px;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       border: none;
-      border-radius: 12px;
+      border-radius: 10px;
       color: #fff;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       cursor: pointer;
       transition: transform 0.2s;
@@ -244,56 +353,32 @@
       margin-top: 10px;
     }
     
-    .stats {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 25px;
-    }
-    
-    .stat-card {
-      flex: 1;
-      background: rgba(255,255,255,0.05);
-      padding: 15px;
-      border-radius: 12px;
-      text-align: center;
-    }
-    
-    .stat-number {
-      font-size: 24px;
-      font-weight: bold;
-      color: #667eea;
-      margin-bottom: 5px;
-    }
-    
-    .stat-label {
-      font-size: 12px;
-      color: #888;
-    }
-    
     .task-list {
-      margin-top: 20px;
+      margin-top: 15px;
     }
     
     .task-item {
       background: rgba(255,255,255,0.05);
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 10px;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      transition: all 0.3s;
     }
     
     .task-checkbox {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       border: 2px solid #667eea;
-      border-radius: 6px;
+      border-radius: 5px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      font-size: 12px;
     }
     
     .task-checkbox.checked {
@@ -305,13 +390,8 @@
     }
     
     .task-title {
-      font-size: 15px;
-      margin-bottom: 4px;
-    }
-    
-    .task-desc {
-      font-size: 13px;
-      color: #888;
+      font-size: 14px;
+      margin-bottom: 3px;
     }
     
     .task-item.completed .task-title {
@@ -321,13 +401,13 @@
     
     .empty-state {
       text-align: center;
-      padding: 60px 20px;
+      padding: 40px 20px;
       color: #666;
     }
     
     .empty-state-icon {
-      font-size: 64px;
-      margin-bottom: 20px;
+      font-size: 48px;
+      margin-bottom: 15px;
       opacity: 0.3;
     }
     
@@ -335,14 +415,27 @@
       background: rgba(102, 126, 234, 0.1);
       border: 1px solid rgba(102, 126, 234, 0.3);
       border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 20px;
+      padding: 12px;
+      margin-bottom: 15px;
       text-align: center;
     }
     
     .selected-date-info h3 {
       color: #667eea;
-      font-size: 18px;
+      font-size: 16px;
+    }
+    
+    /* 连续打卡 */
+    .streak-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 15px;
     }
   </style>
 </head>
@@ -353,34 +446,22 @@
   </div>
   
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('today')">今日计划</button>
-    <button class="tab" onclick="switchTab('calendar')">日历视图</button>
+    <button class="tab active" onclick="switchTab('today')">今日</button>
+    <button class="tab" onclick="switchTab('calendar')">日历</button>
+    <button class="tab" onclick="switchTab('stats')">统计</button>
   </div>
   
   <!-- 今日计划 -->
-  <div id="todaySection" class="plan-section active">
+  <div id="todaySection" class="section active">
     <div class="current-date">
       <h2 id="currentDateDisplay"></h2>
     </div>
     
-    <div class="stats">
-      <div class="stat-card">
-        <div class="stat-number" id="totalTasks">0</div>
-        <div class="stat-label">总任务</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" id="completedTasks">0</div>
-        <div class="stat-label">已完成</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" id="progressPercent">0%</div>
-        <div class="stat-label">进度</div>
-      </div>
-    </div>
+    <div id="streakContainer" style="text-align: center; margin-bottom: 15px;"></div>
     
     <div class="input-group">
       <label>📝 写下今天的目标与心情...</label>
-      <textarea id="todayMood" placeholder="今天感觉如何？有什么想记录的？"></textarea>
+      <textarea id="todayMood" placeholder="今天感觉如何？有什么想记录的？" onchange="saveMood()"></textarea>
     </div>
     
     <div class="input-group">
@@ -394,7 +475,7 @@
   </div>
   
   <!-- 日历视图 -->
-  <div id="calendarSection" class="calendar-container">
+  <div id="calendarSection" class="calendar-container section">
     <div class="calendar-header">
       <button class="calendar-nav" onclick="changeMonth(-1)">‹</button>
       <h3 id="calendarMonthYear"></h3>
@@ -420,7 +501,7 @@
       
       <div class="input-group">
         <label>📝 计划内容</label>
-        <textarea id="selectedDatePlan" placeholder="这一天有什么计划？"></textarea>
+        <textarea id="selectedDatePlan" placeholder="这一天有什么计划？" onchange="saveSelectedDatePlan()"></textarea>
       </div>
       
       <div class="input-group">
@@ -428,10 +509,62 @@
         <input type="text" id="selectedDateTask" placeholder="添加任务..." onkeypress="handleSelectedDateEnter(event)">
       </div>
       
-      <button class="btn" onclick="saveSelectedDatePlan()">保存计划</button>
       <button class="btn btn-secondary" onclick="closeSelectedDate()">关闭</button>
       
       <div class="task-list" id="selectedDateTaskList"></div>
+    </div>
+  </div>
+  
+  <!-- 统计视图 -->
+  <div id="statsSection" class="section">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-number" id="streakDays">0</div>
+        <div class="stat-label">连续打卡</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-number" id="totalCompleted">0</div>
+        <div class="stat-label">总完成</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-number" id="weekCompletion">0%</div>
+        <div class="stat-label">本周完成率</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-number" id="monthTasks">0</div>
+        <div class="stat-label">本月任务</div>
+      </div>
+    </div>
+    
+    <!-- 完成率环形图 -->
+    <div class="chart-container">
+      <div class="chart-title">本周完成率</div>
+      <svg viewBox="0 0 36 36" class="circular-chart">
+        <path class="circle-bg"
+          d="M18 2.0845
+            a 15.9155 15.9155 0 0 1 0 31.831
+            a 15.9155 15.9155 0 0 1 0 -31.831"
+        />
+        <path class="circle"
+          stroke="#667eea"
+          stroke-dasharray="0, 100"
+          id="completionCircle"
+          d="M18 2.0845
+            a 15.9155 15.9155 0 0 1 0 31.831
+            a 15.9155 15.9155 0 0 1 0 -31.831"
+        />
+        <text x="18" y="20.35" class="percentage" id="completionText">0%</text>
+      </svg>
+    </div>
+    
+    <!-- 热力图 -->
+    <div class="heatmap-container">
+      <div class="heatmap-title">📅 近 35 天活跃度</div>
+      <div class="heatmap" id="heatmap"></div>
     </div>
   </div>
 
@@ -446,6 +579,7 @@
       updateDateDisplay();
       loadTodayData();
       renderCalendar();
+      renderStats();
       
       // 注册 Service Worker
       if ('serviceWorker' in navigator) {
@@ -456,17 +590,20 @@
     // 切换标签
     function switchTab(tab) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.plan-section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.calendar-container').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       
       if (tab === 'today') {
         document.querySelector('.tab:nth-child(1)').classList.add('active');
         document.getElementById('todaySection').classList.add('active');
         loadTodayData();
-      } else {
+      } else if (tab === 'calendar') {
         document.querySelector('.tab:nth-child(2)').classList.add('active');
         document.getElementById('calendarSection').classList.add('active');
         renderCalendar();
+      } else {
+        document.querySelector('.tab:nth-child(3)').classList.add('active');
+        document.getElementById('statsSection').classList.add('active');
+        renderStats();
       }
     }
     
@@ -474,6 +611,135 @@
     function updateDateDisplay() {
       const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
       document.getElementById('currentDateDisplay').textContent = currentDate.toLocaleDateString('zh-CN', options);
+    }
+    
+    // 渲染统计
+    function renderStats() {
+      const plans = JSON.parse(localStorage.getItem('plans') || '{}');
+      const today = new Date();
+      
+      // 计算连续打卡天数
+      let streak = 0;
+      let checkDate = new Date(today);
+      while (true) {
+        const dateStr = formatDate(checkDate);
+        if (plans[dateStr] && plans[dateStr].tasks && plans[dateStr].tasks.length > 0) {
+          streak++;
+          checkDate.setDate(checkDate.getDate() - 1);
+        } else {
+          break;
+        }
+      }
+      document.getElementById('streakDays').textContent = streak;
+      
+      // 显示连续打卡徽章
+      if (streak > 0) {
+        document.getElementById('streakContainer').innerHTML = `
+          <div class="streak-badge">
+            🔥 已连续打卡 ${streak} 天
+          </div>
+        `;
+      } else {
+        document.getElementById('streakContainer').innerHTML = '';
+      }
+      
+      // 计算总完成任务数
+      let totalCompleted = 0;
+      Object.values(plans).forEach(day => {
+        if (day.tasks) {
+          totalCompleted += day.tasks.filter(t => t.completed).length;
+        }
+      });
+      document.getElementById('totalCompleted').textContent = totalCompleted;
+      
+      // 计算本周完成率
+      const weekData = getWeekData();
+      const weekTotal = weekData.reduce((sum, day) => sum + (day.total || 0), 0);
+      const weekCompleted = weekData.reduce((sum, day) => sum + (day.completed || 0), 0);
+      const weekPercent = weekTotal === 0 ? 0 : Math.round((weekCompleted / weekTotal) * 100);
+      document.getElementById('weekCompletion').textContent = weekPercent + '%';
+      
+      // 更新环形图
+      updateCircularChart(weekPercent);
+      
+      // 计算本月任务数
+      const monthStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+      let monthTasks = 0;
+      Object.keys(plans).forEach(date => {
+        if (date.startsWith(monthStr) && plans[date].tasks) {
+          monthTasks += plans[date].tasks.length;
+        }
+      });
+      document.getElementById('monthTasks').textContent = monthTasks;
+      
+      // 渲染热力图
+      renderHeatmap();
+    }
+    
+    // 获取本周数据
+    function getWeekData() {
+      const today = new Date();
+      const weekData = [];
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date(today);
+        date.setDate(date.getDate() - i);
+        const dateStr = formatDate(date);
+        const plans = JSON.parse(localStorage.getItem('plans') || '{}');
+        const dayData = plans[dateStr] || { tasks: [] };
+        const total = dayData.tasks ? dayData.tasks.length : 0;
+        const completed = dayData.tasks ? dayData.tasks.filter(t => t.completed).length : 0;
+        weekData.push({ date: dateStr, total, completed });
+      }
+      return weekData;
+    }
+    
+    // 更新环形图
+    function updateCircularChart(percent) {
+      const circle = document.getElementById('completionCircle');
+      const text = document.getElementById('completionText');
+      circle.setAttribute('stroke-dasharray', `${percent}, 100`);
+      text.textContent = `${percent}%`;
+    }
+    
+    // 渲染热力图
+    function renderHeatmap() {
+      const heatmap = document.getElementById('heatmap');
+      heatmap.innerHTML = '';
+      
+      const plans = JSON.parse(localStorage.getItem('plans') || '{}');
+      const today = new Date();
+      
+      // 生成近 35 天
+      for (let i = 34; i >= 0; i--) {
+        const date = new Date(today);
+        date.setDate(date.getDate() - i);
+        const dateStr = formatDate(date);
+        const dayData = plans[dateStr] || { tasks: [] };
+        const taskCount = dayData.tasks ? dayData.tasks.length : 0;
+        
+        const day = document.createElement('div');
+        day.className = 'heatmap-day';
+        
+        if (taskCount === 0) {
+          day.classList.add('level-0');
+        } else if (taskCount <= 2) {
+          day.classList.add('level-1');
+        } else if (taskCount <= 4) {
+          day.classList.add('level-2');
+        } else if (taskCount <= 6) {
+          day.classList.add('level-3');
+        } else {
+          day.classList.add('level-4');
+        }
+        
+        day.title = `${dateStr}: ${taskCount} 个任务`;
+        heatmap.appendChild(day);
+      }
+    }
+    
+    // 格式化日期
+    function formatDate(date) {
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     }
     
     // 渲染日历
@@ -492,30 +758,25 @@
       const calendarDays = document.getElementById('calendarDays');
       calendarDays.innerHTML = '';
       
-      // 空白占位
       for (let i = 0; i < firstDay; i++) {
         const empty = document.createElement('div');
         calendarDays.appendChild(empty);
       }
       
-      // 日期
       for (let day = 1; day <= daysInMonth; day++) {
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         const dayEl = document.createElement('div');
         dayEl.className = 'day';
         
-        // 检查是否是今天
         if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
           dayEl.classList.add('today');
         }
         
-        // 检查是否是未来日期
         const thisDate = new Date(year, month, day);
         if (thisDate > today) {
           dayEl.classList.add('future');
         }
         
-        // 检查是否有计划
         const plans = JSON.parse(localStorage.getItem('plans') || '{}');
         if (plans[dateStr]) {
           dayEl.classList.add('has-plan');
@@ -540,8 +801,6 @@
       
       document.getElementById('selectedDateSection').style.display = 'block';
       loadSelectedDateData();
-      
-      // 滚动到该区域
       document.getElementById('selectedDateSection').scrollIntoView({ behavior: 'smooth' });
     }
     
@@ -566,7 +825,20 @@
       
       document.getElementById('todayMood').value = todayData.mood || '';
       renderTaskList(todayData.tasks || [], 'taskList');
-      updateStats(todayData.tasks || []);
+    }
+    
+    // 保存心情
+    function saveMood() {
+      const today = getTodayStr();
+      const mood = document.getElementById('todayMood').value;
+      const data = JSON.parse(localStorage.getItem('plans') || '{}');
+      
+      if (!data[today]) {
+        data[today] = { mood: '', tasks: [] };
+      }
+      
+      data[today].mood = mood;
+      localStorage.setItem('plans', JSON.stringify(data));
     }
     
     // 加载选择日期的数据
@@ -578,6 +850,22 @@
       
       document.getElementById('selectedDatePlan').value = dateData.plan || '';
       renderTaskList(dateData.tasks || [], 'selectedDateTaskList');
+    }
+    
+    // 保存选择日期的计划
+    function saveSelectedDatePlan() {
+      if (!selectedDate) return;
+      
+      const plan = document.getElementById('selectedDatePlan').value;
+      const data = JSON.parse(localStorage.getItem('plans') || '{}');
+      
+      if (!data[selectedDate]) {
+        data[selectedDate] = { plan: '', tasks: [] };
+      }
+      
+      data[selectedDate].plan = plan;
+      localStorage.setItem('plans', JSON.stringify(data));
+      renderCalendar();
     }
     
     // 渲染任务列表
@@ -601,21 +889,9 @@
           </div>
           <div class="task-content">
             <div class="task-title">${escapeHtml(task.title)}</div>
-            ${task.desc ? `<div class="task-desc">${escapeHtml(task.desc)}</div>` : ''}
           </div>
         </div>
       `).join('');
-    }
-    
-    // 更新统计
-    function updateStats(tasks) {
-      const total = tasks.length;
-      const completed = tasks.filter(t => t.completed).length;
-      const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
-      
-      document.getElementById('totalTasks').textContent = total;
-      document.getElementById('completedTasks').textContent = completed;
-      document.getElementById('progressPercent').textContent = percent + '%';
     }
     
     // 添加任务
@@ -637,31 +913,13 @@
       
       data[today].tasks.push({
         title: title,
-        desc: '',
         completed: false
       });
       
       localStorage.setItem('plans', JSON.stringify(data));
       input.value = '';
       loadTodayData();
-    }
-    
-    // 保存选择日期的计划
-    function saveSelectedDatePlan() {
-      if (!selectedDate) return;
-      
-      const plan = document.getElementById('selectedDatePlan').value.trim();
-      const data = JSON.parse(localStorage.getItem('plans') || '{}');
-      
-      if (!data[selectedDate]) {
-        data[selectedDate] = { plan: '', tasks: [] };
-      }
-      
-      data[selectedDate].plan = plan;
-      
-      localStorage.setItem('plans', JSON.stringify(data));
-      alert('计划已保存！');
-      renderCalendar();
+      renderStats();
     }
     
     // 切换任务完成状态
@@ -678,6 +936,7 @@
         } else {
           loadSelectedDateData();
         }
+        renderStats();
       }
     }
     
@@ -708,7 +967,6 @@
         
         data[selectedDate].tasks.push({
           title: title,
-          desc: '',
           completed: false
         });
         
@@ -716,6 +974,7 @@
         input.value = '';
         loadSelectedDateData();
         renderCalendar();
+        renderStats();
       }
     }
     
