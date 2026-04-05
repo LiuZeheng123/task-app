@@ -457,7 +457,7 @@
       margin-bottom: 15px;
     }
     
-    /* 🔥 烟花层级 */
+    /* 🔥 烟花层级 - 最高 */
     #fireworksCanvas {
       position: fixed;
       top: 0;
@@ -468,7 +468,7 @@
       z-index: 10000;
     }
     
-    /* 🔥 第一阶段文字弹窗样式 */
+    /* 🔥 第一阶段文字弹窗 - 和烟花同层 */
     .intro-modal {
       display: none;
       position: fixed;
@@ -476,10 +476,11 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      z-index: 9500;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 10001; /* 比烟花更高，确保文字可见 */
       align-items: center;
       justify-content: center;
+      pointer-events: none; /* 让点击穿透 */
     }
     
     .intro-modal.active {
@@ -488,13 +489,17 @@
     }
     
     .intro-text {
-      font-size: 28px;
+      font-size: 32px;
       font-weight: bold;
       color: #fff;
       text-align: center;
-      text-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
-      padding: 20px;
-      line-height: 1.5;
+      text-shadow: 0 0 30px rgba(102, 126, 234, 1), 0 0 60px rgba(102, 126, 234, 0.8), 0 0 90px rgba(102, 126, 234, 0.6);
+      padding: 30px;
+      line-height: 1.6;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(102, 126, 234, 0.5);
     }
     
     .celebration-modal {
@@ -765,59 +770,57 @@
   </button>
 
   <script>
-    // 文学名言库（50+ 条）
+    // 🔥 现代文学作品名言库（国内外经典，有感染力，无古诗词）
     const literaryQuotes = [
-      { text: "生活不是等待暴风雨过去，而是学会在雨中翩翩起舞。", author: "—— 维维安·格林", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop&q=60" },
-      { text: "每一个不曾起舞的日子，都是对生命的辜负。", author: "—— 尼采", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop&q=60" },
-      { text: "当你穿过了暴风雨，你就不再是原来那个人了。", author: "—— 村上春树", image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=300&fit=crop&q=60" },
-      { text: "世界上只有一种真正的英雄主义，那就是在认清生活的真相后依然热爱生活。", author: "—— 罗曼·罗兰", image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=300&fit=crop&q=60" },
-      { text: "人不是为失败而生的，一个人可以被毁灭，但不能被打败。", author: "—— 海明威", image: "https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=400&h=300&fit=crop&q=60" },
-      { text: "你要做一个不动声色的大人了。不准情绪化，不准偷偷想念，不准回头看。", author: "—— 村上春树", image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop&q=60" },
-      { text: "我们终此一生，就是要摆脱他人的期待，找到真正的自己。", author: "—— 伍绮诗", image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=300&fit=crop&q=60" },
-      { text: "愿你一生努力，一生被爱，想要的都拥有，得不到的都释怀。", author: "—— 八月长安", image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=300&fit=crop&q=60" },
-      { text: "黑夜无论怎样悠长，白昼总会到来。", author: "—— 莎士比亚", image: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=400&h=300&fit=crop&q=60" },
-      { text: "所谓无底深渊，下去，也是前程万里。", author: "—— 木心", image: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=400&h=300&fit=crop&q=60" },
-      { text: "生活不可能像你想象得那么好，但也不会像你想象得那么糟。", author: "—— 莫泊桑", image: "https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=400&h=300&fit=crop&q=60" },
-      { text: "且视他人之疑目如盏盏鬼火，大胆地去走你的夜路。", author: "—— 史铁生", image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400&h=300&fit=crop&q=60" },
-      { text: "我来不及认真地年轻，待明白过来时，只能选择认真地老去。", author: "—— 三毛", image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=300&fit=crop&q=60" },
-      { text: "如果你认识从前的我，那么你就会原谅现在的我。", author: "—— 张爱玲", image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&h=300&fit=crop&q=60" },
-      { text: "于千万人之中遇见你所要遇见的人，于千万年之中，时间的无涯的荒野里。", author: "—— 张爱玲", image: "https://images.unsplash.com/photo-1518621736915-f3b1ffd29c3b?w=400&h=300&fit=crop&q=60" },
-      { text: "人生若只如初见，何事秋风悲画扇。", author: "—— 纳兰性德", image: "https://images.unsplash.com/photo-1499938701117-10c97a78c620?w=400&h=300&fit=crop&q=60" },
-      { text: "曾经沧海难为水，除却巫山不是云。", author: "—— 元稹", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop&q=60" },
-      { text: "两情若是久长时，又岂在朝朝暮暮。", author: "—— 秦观", image: "https://images.unsplash.com/photo-1518621736915-f3b1ffd29c3b?w=400&h=300&fit=crop&q=60" },
-      { text: "衣带渐宽终不悔，为伊消得人憔悴。", author: "—— 柳永", image: "https://images.unsplash.com/photo-1496568816309-51d71e5731b9?w=400&h=300&fit=crop&q=60" },
-      { text: "众里寻他千百度，蓦然回首，那人却在灯火阑珊处。", author: "—— 辛弃疾", image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop&q=60" },
-      { text: "天生我材必有用，千金散尽还复来。", author: "—— 李白", image: "https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=400&h=300&fit=crop&q=60" },
-      { text: "长风破浪会有时，直挂云帆济沧海。", author: "—— 李白", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop&q=60" },
-      { text: "海内存知己，天涯若比邻。", author: "—— 王勃", image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=300&fit=crop&q=60" },
-      { text: "会当凌绝顶，一览众山小。", author: "—— 杜甫", image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=300&fit=crop&q=60" },
-      { text: "采菊东篱下，悠然见南山。", author: "—— 陶渊明", image: "https://images.unsplash.com/photo-1490750967860-bc9254f40e2a?w=400&h=300&fit=crop&q=60" },
-      { text: "山重水复疑无路，柳暗花明又一村。", author: "—— 陆游", image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop&q=60" },
-      { text: "问渠那得清如许，为有源头活水来。", author: "—— 朱熹", image: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=400&h=300&fit=crop&q=60" },
-      { text: "不识庐山真面目，只缘身在此山中。", author: "—— 苏轼", image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=300&fit=crop&q=60" },
-      { text: "欲把西湖比西子，淡妆浓抹总相宜。", author: "—— 苏轼", image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=300&fit=crop&q=60" },
-      { text: "竹杖芒鞋轻胜马，谁怕？一蓑烟雨任平生。", author: "—— 苏轼", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop&q=60" },
-      { text: "人生到处知何似，应似飞鸿踏雪泥。", author: "—— 苏轼", image: "https://images.unsplash.com/photo-1499938701117-10c97a78c620?w=400&h=300&fit=crop&q=60" },
-      { text: "十年生死两茫茫，不思量，自难忘。", author: "—— 苏轼", image: "https://images.unsplash.com/photo-1518621736915-f3b1ffd29c3b?w=400&h=300&fit=crop&q=60" },
-      { text: "此情可待成追忆，只是当时已惘然。", author: "—— 李商隐", image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&h=300&fit=crop&q=60" },
-      { text: "身无彩凤双飞翼，心有灵犀一点通。", author: "—— 李商隐", image: "https://images.unsplash.com/photo-1496568816309-51d71e5731b9?w=400&h=300&fit=crop&q=60" },
-      { text: "春蚕到死丝方尽，蜡炬成灰泪始干。", author: "—— 李商隐", image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop&q=60" },
-      { text: "同是天涯沦落人，相逢何必曾相识。", author: "—— 白居易", image: "https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=400&h=300&fit=crop&q=60" },
-      { text: "在天愿作比翼鸟，在地愿为连理枝。", author: "—— 白居易", image: "https://images.unsplash.com/photo-1518621736915-f3b1ffd29c3b?w=400&h=300&fit=crop&q=60" },
-      { text: "天长地久有时尽，此恨绵绵无绝期。", author: "—— 白居易", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop&q=60" },
-      { text: "路漫漫其修远兮，吾将上下而求索。", author: "—— 屈原", image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=300&fit=crop&q=60" },
-      { text: "亦余心之所善兮，虽九死其犹未悔。", author: "—— 屈原", image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop&q=60" },
-      { text: "生当作人杰，死亦为鬼雄。", author: "—— 李清照", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop&q=60" },
-      { text: "寻寻觅觅，冷冷清清，凄凄惨惨戚戚。", author: "—— 李清照", image: "https://images.unsplash.com/photo-1499938701117-10c97a78c620?w=400&h=300&fit=crop&q=60" },
-      { text: "花自飘零水自流，一种相思，两处闲愁。", author: "—— 李清照", image: "https://images.unsplash.com/photo-1518621736915-f3b1ffd29c3b?w=400&h=300&fit=crop&q=60" },
-      { text: "此情无计可消除，才下眉头，却上心头。", author: "—— 李清照", image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&h=300&fit=crop&q=60" },
-      { text: "知否，知否？应是绿肥红瘦。", author: "—— 李清照", image: "https://images.unsplash.com/photo-1496568816309-51d71e5731b9?w=400&h=300&fit=crop&q=60" },
-      { text: "我见青山多妩媚，料青山见我应如是。", author: "—— 辛弃疾", image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=300&fit=crop&q=60" },
-      { text: "想当年，金戈铁马，气吞万里如虎。", author: "—— 辛弃疾", image: "https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=400&h=300&fit=crop&q=60" },
-      { text: "昨夜西风凋碧树，独上高楼，望尽天涯路。", author: "—— 晏殊", image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop&q=60" },
-      { text: "无可奈何花落去，似曾相识燕归来。", author: "—— 晏殊", image: "https://images.unsplash.com/photo-1490750967860-bc9254f40e2a?w=400&h=300&fit=crop&q=60" },
-      { text: "多情自古伤离别，更那堪冷落清秋节。", author: "—— 柳永", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop&q=60" },
-      { text: "今宵酒醒何处？杨柳岸，晓风残月。", author: "—— 柳永", image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=300&fit=crop&q=60" }
+      { text: "生活总是让我们遍体鳞伤，但到后来，那些受伤的地方一定会变成我们最强壮的地方。", author: "—— 海明威《永别了，武器》", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop&q=60" },
+      { text: "一个人并不是生来要给打败的，你尽可以把他消灭掉，可就是打不败他。", author: "—— 海明威《老人与海》", image: "https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=300&h=200&fit=crop&q=60" },
+      { text: "世界上有这样一些幸福的人，他们把自己的痛苦化作他人的幸福。", author: "—— 斯托夫人《汤姆叔叔的小屋》", image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=300&h=200&fit=crop&q=60" },
+      { text: "我越是孤独，越是没有朋友，越是没有支持，我就得越尊重我自己。", author: "—— 夏洛蒂·勃朗特《简·爱》", image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=300&h=200&fit=crop&q=60" },
+      { text: "无论做什么，记得为自己而做，那就毫无怨言。", author: "—— 亦舒《流金岁月》", image: "https://images.unsplash.com/photo-1518621736915-f3b1ffd29c3b?w=300&h=200&fit=crop&q=60" },
+      { text: "做人要含蓄点，得过且过，不必斤斤计较，水清无鱼，人清无徒，谁又不跟谁一辈子，一些事放在心中算了。", author: "—— 亦舒《蔷薇泡沫》", image: "https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?w=300&h=200&fit=crop&q=60" },
+      { text: "生命从来不是公平的，得到多少，便要靠那个多少做到最好，努力生活下去。", author: "—— 亦舒《我们不是天使》", image: "https://images.unsplash.com/photo-1499938701117-10c97a78c620?w=300&h=200&fit=crop&q=60" },
+      { text: "人一定要受过伤才会沉默专注，无论是心灵或肉体上的创伤，对成长都有益处。", author: "—— 亦舒《花解语》", image: "https://images.unsplash.com/photo-1496568816309-51d71e5731b9?w=300&h=200&fit=crop&q=60" },
+      { text: "要生活得漂亮，需要付出极大忍耐，一不抱怨，二不解释，绝对是个人才。", author: "—— 亦舒《变形记》", image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&h=200&fit=crop&q=60" },
+      { text: "无论多豪华的婚礼都不代表幸福婚姻，两个人终生相处和睦与否和筵开几席、多少首饰全无关联。", author: "—— 亦舒《小紫荆》", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop&q=60" },
+      { text: "能够说出的委屈，便不算委屈；能够抢走的爱人，便不算爱人。", author: "—— 亦舒《开到荼蘼》", image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=200&fit=crop&q=60" },
+      { text: "爱一个人决不潇洒，为自己留了后步的，也就不是爱。", author: "—— 亦舒《星之碎片》", image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=300&h=200&fit=crop&q=60" },
+      { text: "自由社会，自由选择，要笑得出才能笑，否则，笑比哭还难看，也不必勉强。", author: "—— 亦舒《艳阳天》", image: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&h=200&fit=crop&q=60" },
+      { text: "也许一个人在真正无可奈何的时候，除了微笑，也只好微笑了。", author: "—— 亦舒《家明与玫瑰》", image: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=300&h=200&fit=crop&q=60" },
+      { text: "在黑暗里，取出杯子，喝干了酒，千头万绪，恨事那么多，不知道挑哪一宗来咬牙切齿才好，索性全抛在脑后，安静睡觉。", author: "—— 亦舒《忽尔今夏》", image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=300&h=200&fit=crop&q=60" },
+      { text: "我提着一个袋子，边走边拾。一路上拾起无数我不想要的东西。当我遇到我真正想要的东西之时，袋子已经装满了。", author: "—— 亦舒《印度墨》", image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&h=200&fit=crop&q=60" },
+      { text: "已去之事不可留，已逝之情不可恋，能留能恋，就没有今天。", author: "—— 亦舒《花常好月常圆人长久》", image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&h=200&fit=crop&q=60" },
+      { text: "一个人走不开，不过因为他不想走开；一个人失约，乃因他不想赴约，一切借口均属废话，都是用以掩饰不愿牺牲。", author: "—— 亦舒《一千零一妙方》", image: "https://images.unsplash.com/photo-1490750967860-bc9254f40e2a?w=300&h=200&fit=crop&q=60" },
+      { text: "人们不解释的主要原因是根本不在乎对方的想法，无关重要的人，对无关重要的事有点儿误会，有什么关系，你信也好，不信也好，都于当事人生活毫无影响，何劳解释。", author: "—— 亦舒《阿修罗》", image: "https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=300&h=200&fit=crop&q=60" },
+      { text: "不过女人到底是女人，日子久了就任由感情泛滥萌芽，至今日造成不可收拾的局面。", author: "—— 亦舒《流金岁月》", image: "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=300&h=200&fit=crop&q=60" },
+      { text: "凡是人尽可夫的女人，都挂着一个淑女的招牌。", author: "—— 亦舒《如今都是错》", image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=300&h=200&fit=crop&q=60" },
+      { text: "人生短短数十载，最要紧的是满足自己，不是讨好他人。", author: "—— 亦舒《美丽新世界》", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop&q=60" },
+      { text: "一个人走不开，不过因为他不想走开。", author: "—— 亦舒", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300&h=200&fit=crop&q=60" },
+      { text: "真正有气质的淑女，从不炫耀她所拥有的一切，她不告诉人她读过什么书，去过什么地方，有多少件衣服，买过什么珠宝，因为她没有自卑感。", author: "—— 亦舒《圆舞》", image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=300&h=200&fit=crop&q=60" },
+      { text: "如此情深，却难以启齿。原来你若真爱一个人，内心酸涩，反而会说不出话来，甜言蜜语，多数说给不相干的人听。", author: "—— 亦舒《她的二三事》", image: "https://images.unsplash.com/photo-1518621736915-f3b1ffd29c3b?w=300&h=200&fit=crop&q=60" },
+      { text: "做人凡事要静；静静地来，静静地去，静静努力，静静收获，切忌喧哗。", author: "—— 亦舒《直至海枯石烂》", image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=200&fit=crop&q=60" },
+      { text: "人一定要受过伤才会沉默专注，无论是心灵或肉体上的创伤，对成长都有益处。", author: "—— 亦舒", image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=300&h=200&fit=crop&q=60" },
+      { text: "有能力的人影响别人，没能力的一群受人影响。", author: "—— 亦舒《喜宝》", image: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=300&h=200&fit=crop&q=60" },
+      { text: "聪明人，无谓争意气。", author: "—— 亦舒《连环》", image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=300&h=200&fit=crop&q=60" },
+      { text: "当大人有什么优点？为什么要处处让着小孩？", author: "—— 亦舒《承欢记》", image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&h=200&fit=crop&q=60" },
+      { text: "我令憎我的人失望了，因为我活得这样好。", author: "—— 亦舒《我的前半生》", image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&h=200&fit=crop&q=60" },
+      { text: "一个人的时间用在什么地方是看得见的。", author: "—— 亦舒《她比烟花寂寞》", image: "https://images.unsplash.com/photo-1490750967860-bc9254f40e2a?w=300&h=200&fit=crop&q=60" },
+      { text: "哭要一个人躲着哭，笑呢全世界陪你笑。", author: "—— 亦舒《爱情之死》", image: "https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=300&h=200&fit=crop&q=60" },
+      { text: "失去的东西，其实从来未曾真正地属于你，也不必惋惜。", author: "—— 亦舒《玫瑰的故事》", image: "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=300&h=200&fit=crop&q=60" },
+      { text: "假如爱一个人，跟那人在一起，就是最大的幸福。", author: "—— 亦舒《如果墙会说话》", image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=300&h=200&fit=crop&q=60" },
+      { text: "凡是人尽可夫的女人，都挂着一个淑女的招牌。", author: "—— 亦舒", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop&q=60" },
+      { text: "人一定要受过伤才会沉默专注。", author: "—— 亦舒", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300&h=200&fit=crop&q=60" },
+      { text: "做人要含蓄点，得过且过，不必斤斤计较。", author: "—— 亦舒", image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=300&h=200&fit=crop&q=60" },
+      { text: "生命从来不是公平的，得到多少，便要靠那个多少做到最好。", author: "—— 亦舒", image: "https://images.unsplash.com/photo-1518621736915-f3b1ffd29c3b?w=300&h=200&fit=crop&q=60" },
+      { text: "要生活得漂亮，需要付出极大忍耐。", author: "—— 亦舒", image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=200&fit=crop&q=60" },
+      { text: "无论做什么，记得为自己而做，那就毫无怨言。", author: "—— 亦舒", image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=300&h=200&fit=crop&q=60" },
+      { text: "能够说出的委屈，便不算委屈。", author: "—— 亦舒", image: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=300&h=200&fit=crop&q=60" },
+      { text: "爱一个人决不潇洒，为自己留了后步的，也就不是爱。", author: "—— 亦舒", image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=300&h=200&fit=crop&q=60" },
+      { text: "自由社会，自由选择。", author: "—— 亦舒", image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&h=200&fit=crop&q=60" },
+      { text: "也许一个人在真正无可奈何的时候，除了微笑，也只好微笑了。", author: "—— 亦舒", image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&h=200&fit=crop&q=60" },
+      { text: "在黑暗里，取出杯子，喝干了酒。", author: "—— 亦舒", image: "https://images.unsplash.com/photo-1490750967860-bc9254f40e2a?w=300&h=200&fit=crop&q=60" },
+      { text: "我提着一个袋子，边走边拾。", author: "—— 亦舒", image: "https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=300&h=200&fit=crop&q=60" },
+      { text: "已去之事不可留，已逝之情不可恋。", author: "—— 亦舒", image: "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=300&h=200&fit=crop&q=60" },
+      { text: "一个人走不开，不过因为他不想走开。", author: "—— 亦舒", image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=300&h=200&fit=crop&q=60" }
     ];
 
     let currentDate = new Date();
@@ -1387,7 +1390,7 @@
       savedQuotes.push({
         text: text,
         author: author ? '—— ' + author : '',
-        image: `https://source.unsplash.com/400x300/?nature,landscape,sky&sig=${Date.now()}`
+        image: `https://source.unsplash.com/300x200/?nature,landscape,sky&sig=${Date.now()}`
       });
       
       localStorage.setItem('customQuotes', JSON.stringify(savedQuotes));
