@@ -394,6 +394,31 @@
       color: #666;
     }
     
+    /* 🔥 删除按钮样式 */
+    .task-delete {
+      width: 24px;
+      height: 24px;
+      border: none;
+      background: rgba(255, 107, 107, 0.2);
+      color: #ff6b6b;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    
+    .task-delete:hover {
+      background: rgba(255, 107, 107, 0.4);
+    }
+    
+    .task-delete:active {
+      transform: scale(0.9);
+    }
+    
     .empty-state {
       text-align: center;
       padding: 40px 20px;
@@ -432,15 +457,15 @@
       margin-bottom: 15px;
     }
     
-    /* 🔥 烟花层级调整：确保叠在弹窗内容之上 */
+    /* 🔥 烟花层级调整 */
     #fireworksCanvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      pointer-events: none; /* 点击穿透，不影响按钮 */
-      z-index: 10000; /* 最高层级 */
+      pointer-events: none;
+      z-index: 10000;
     }
     
     .celebration-modal {
@@ -473,7 +498,7 @@
       box-shadow: 0 0 50px rgba(102, 126, 234, 0.3), 0 20px 60px rgba(0, 0, 0, 0.6);
       animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
-      z-index: 9001; /* 低于烟花，高于背景 */
+      z-index: 9001;
     }
     
     .celebration-image {
@@ -482,7 +507,6 @@
       object-fit: cover;
       display: block;
       border-bottom: 1px solid rgba(255,255,255,0.1);
-      /* 🔥 图片加载失败时的保底背景 */
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
     
@@ -670,7 +694,6 @@
   <!-- 庆祝弹窗 -->
   <div class="celebration-modal" id="celebrationModal">
     <div class="celebration-content">
-      <!-- 🔥 添加 onerror 自动隐藏裂图 -->
       <img class="celebration-image" id="celebrationImage" src="" alt="励志图片" onerror="this.style.display='none'">
       <div class="celebration-text">
         <div class="celebration-quote" id="celebrationQuote"></div>
@@ -708,7 +731,7 @@
   </button>
 
   <script>
-    // 文学名言库（持续扩展中...）
+    // 文学名言库（50+ 条）
     const literaryQuotes = [
       { text: "生活不是等待暴风雨过去，而是学会在雨中翩翩起舞。", author: "—— 维维安·格林", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop&q=60" },
       { text: "每一个不曾起舞的日子，都是对生命的辜负。", author: "—— 尼采", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop&q=60" },
@@ -1065,7 +1088,7 @@
       renderCalendar();
     }
     
-    // 渲染任务列表
+    // 🔥 渲染任务列表（包含删除按钮）
     function renderTaskList(tasks, containerId) {
       const container = document.getElementById(containerId);
       
@@ -1080,15 +1103,45 @@
       }
       
       container.innerHTML = tasks.map((task, index) => `
-        <div class="task-item ${task.completed ? 'completed' : ''}" onclick="toggleTask(${index}, '${containerId}')">
-          <div class="task-checkbox ${task.completed ? 'checked' : ''}">
+        <div class="task-item ${task.completed ? 'completed' : ''}">
+          <div class="task-checkbox ${task.completed ? 'checked' : ''}" onclick="toggleTask(${index}, '${containerId}')">
             ${task.completed ? '✓' : ''}
           </div>
-          <div class="task-content">
+          <div class="task-content" onclick="toggleTask(${index}, '${containerId}')">
             <div class="task-title">${escapeHtml(task.title)}</div>
           </div>
+          <button class="task-delete" onclick="deleteTask(${index}, '${containerId}')" title="删除此任务">✕</button>
         </div>
       `).join('');
+    }
+    
+    // 🔥 删除任务函数
+    function deleteTask(index, containerId) {
+      const date = containerId === 'taskList' ? getTodayStr() : selectedDate;
+      const data = JSON.parse(localStorage.getItem('plans') || '{}');
+      
+      if (data[date] && data[date].tasks && data[date].tasks[index]) {
+        if (confirm('确定要删除这个任务吗？')) {
+          data[date].tasks.splice(index, 1);
+          
+          // 如果删除后没有任务了，清理空数据
+          if (data[date].tasks.length === 0 && !data[date].mood && !data[date].plan) {
+            delete data[date];
+          }
+          
+          localStorage.setItem('plans', JSON.stringify(data));
+          
+          // 刷新对应视图
+          if (containerId === 'taskList') {
+            loadTodayData();
+            renderStats();
+          } else {
+            loadSelectedDateData();
+            renderCalendar();
+            renderStats();
+          }
+        }
+      }
     }
     
     // 添加任务
@@ -1133,9 +1186,7 @@
           renderStats();
           
           const tasks = data[date].tasks;
-          const allCompleted = tasks.length > 0 && tasks.every(t => t.completed);
-          
-          if (allCompleted) {
+          if (tasks.length > 0 && tasks.every(t => t.completed)) {
             showCelebration();
           }
         } else {
@@ -1167,10 +1218,9 @@
         this.x = x;
         this.y = y;
         this.color = color;
-        this.size = Math.random() * 2.5 + 1; // 🔥 粒子大小随机
-        // 爆炸速度
+        this.size = Math.random() * 2.5 + 1;
         const angle = Math.random() * Math.PI * 2;
-        const velocity = Math.random() * 6 + 3; // 🔥 速度加快
+        const velocity = Math.random() * 6 + 3;
         this.vx = Math.cos(angle) * velocity;
         this.vy = Math.sin(angle) * velocity;
         this.alpha = 1;
@@ -1179,7 +1229,7 @@
       }
 
       update() {
-        this.vx *= 0.96; // 空气阻力
+        this.vx *= 0.96;
         this.vy *= 0.96;
         this.vy += this.gravity;
         this.x += this.vx;
@@ -1194,7 +1244,6 @@
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fillStyle = this.color;
         ctx.fill();
-        // 🔥 发光效果
         ctx.shadowBlur = 15;
         ctx.shadowColor = this.color;
         ctx.restore();
@@ -1205,7 +1254,7 @@
     function createExplosion(x, y) {
       const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#ffd700', '#ff6b6b', '#ffffff'];
       const color = colors[Math.floor(Math.random() * colors.length)];
-      const count = 120; // 🔥 粒子数量翻倍
+      const count = 120;
       
       for (let i = 0; i < count; i++) {
         particles.push(new Particle(x, y, color));
@@ -1219,11 +1268,9 @@
         return;
       }
 
-      // 🔥 拖尾效果更明显
       ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // 随机发射烟花
       if (fireworksActive && Math.random() < 0.08) {
         createExplosion(
           Math.random() * canvas.width,
@@ -1246,7 +1293,6 @@
     function startFireworks() {
       fireworksActive = true;
       particles = [];
-      // 初始先放几个
       for(let i=0; i<4; i++) {
         setTimeout(() => {
           createExplosion(canvas.width * (0.2 + Math.random() * 0.6), canvas.height * 0.3);
@@ -1268,7 +1314,7 @@
       const quote = getRandomQuote();
       const img = document.getElementById('celebrationImage');
       
-      img.style.display = 'block'; // 重置显示
+      img.style.display = 'block';
       img.src = quote.image;
       document.getElementById('celebrationQuote').textContent = quote.text;
       document.getElementById('celebrationAuthor').textContent = quote.author;
