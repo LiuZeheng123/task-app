@@ -457,7 +457,7 @@
       margin-bottom: 15px;
     }
     
-    /* 🔥 烟花层级调整 */
+    /* 🔥 烟花层级 */
     #fireworksCanvas {
       position: fixed;
       top: 0;
@@ -466,6 +466,35 @@
       height: 100%;
       pointer-events: none;
       z-index: 10000;
+    }
+    
+    /* 🔥 第一阶段文字弹窗样式 */
+    .intro-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 9500;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .intro-modal.active {
+      display: flex;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .intro-text {
+      font-size: 28px;
+      font-weight: bold;
+      color: #fff;
+      text-align: center;
+      text-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+      padding: 20px;
+      line-height: 1.5;
     }
     
     .celebration-modal {
@@ -691,7 +720,12 @@
     </div>
   </div>
 
-  <!-- 庆祝弹窗 -->
+  <!-- 第一阶段：烟花 + 文字 -->
+  <div class="intro-modal" id="introModal">
+    <div class="intro-text">完成了一天的任务！<br>郭虹越真棒！🎉</div>
+  </div>
+
+  <!-- 第二阶段：名言卡片 -->
   <div class="celebration-modal" id="celebrationModal">
     <div class="celebration-content">
       <img class="celebration-image" id="celebrationImage" src="" alt="励志图片" onerror="this.style.display='none'">
@@ -1308,26 +1342,34 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    // 显示庆祝弹窗
+    // 🔥 核心逻辑：分阶段显示
     function showCelebration() {
-      const modal = document.getElementById('celebrationModal');
-      const quote = getRandomQuote();
-      const img = document.getElementById('celebrationImage');
-      
-      img.style.display = 'block';
-      img.src = quote.image;
-      document.getElementById('celebrationQuote').textContent = quote.text;
-      document.getElementById('celebrationAuthor').textContent = quote.author;
-      
-      modal.classList.add('active');
+      // 1. 显示文字 + 开始放烟花
+      const introModal = document.getElementById('introModal');
+      introModal.classList.add('active');
       startFireworks();
+
+      // 2. 3 秒后，停止烟花，隐藏文字，弹出名言卡片
+      setTimeout(() => {
+        stopFireworks(); // 停止烟花
+        introModal.classList.remove('active'); // 隐藏文字
+
+        // 3. 弹出名言卡片
+        const modal = document.getElementById('celebrationModal');
+        const quote = getRandomQuote();
+        const img = document.getElementById('celebrationImage');
+        img.style.display = 'block';
+        img.src = quote.image;
+        document.getElementById('celebrationQuote').textContent = quote.text;
+        document.getElementById('celebrationAuthor').textContent = quote.author;
+        modal.classList.add('active');
+      }, 3000); // 3000 毫秒 = 3 秒
     }
     
     // 关闭庆祝弹窗
     function closeCelebration() {
       const modal = document.getElementById('celebrationModal');
       modal.classList.remove('active');
-      stopFireworks();
     }
     
     // 保存自定义名言
