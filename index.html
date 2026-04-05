@@ -432,15 +432,15 @@
       margin-bottom: 15px;
     }
     
-    /* 烟花 Canvas */
+    /* 🔥 烟花层级调整：确保叠在弹窗内容之上 */
     #fireworksCanvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      pointer-events: none;
-      z-index: 2000;
+      pointer-events: none; /* 点击穿透，不影响按钮 */
+      z-index: 10000; /* 最高层级 */
     }
     
     .celebration-modal {
@@ -452,7 +452,7 @@
       height: 100%;
       background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(15px);
-      z-index: 1000;
+      z-index: 9000;
       align-items: center;
       justify-content: center;
       padding: 20px;
@@ -473,7 +473,7 @@
       box-shadow: 0 0 50px rgba(102, 126, 234, 0.3), 0 20px 60px rgba(0, 0, 0, 0.6);
       animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
-      z-index: 1001;
+      z-index: 9001; /* 低于烟花，高于背景 */
     }
     
     .celebration-image {
@@ -482,6 +482,8 @@
       object-fit: cover;
       display: block;
       border-bottom: 1px solid rgba(255,255,255,0.1);
+      /* 🔥 图片加载失败时的保底背景 */
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
     
     .celebration-text {
@@ -515,11 +517,6 @@
       cursor: pointer;
       transition: all 0.3s;
       box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    }
-    
-    .celebration-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
     }
     
     .celebration-btn:active {
@@ -673,7 +670,8 @@
   <!-- 庆祝弹窗 -->
   <div class="celebration-modal" id="celebrationModal">
     <div class="celebration-content">
-      <img class="celebration-image" id="celebrationImage" src="" alt="励志图片">
+      <!-- 🔥 添加 onerror 自动隐藏裂图 -->
+      <img class="celebration-image" id="celebrationImage" src="" alt="励志图片" onerror="this.style.display='none'">
       <div class="celebration-text">
         <div class="celebration-quote" id="celebrationQuote"></div>
         <div class="celebration-author" id="celebrationAuthor"></div>
@@ -703,7 +701,7 @@
 
   <!-- 烟花 Canvas 画布 -->
   <canvas id="fireworksCanvas"></canvas>
-
+  
   <!-- 悬浮按钮：添加名言 -->
   <button onclick="openCustomQuoteModal()" style="position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: #fff; font-size: 24px; cursor: pointer; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); display: flex; align-items: center; justify-content: center; z-index: 100;">
     ✍️
@@ -769,6 +767,7 @@
     let selectedDate = null;
     let currentMonth = new Date();
     
+    // 初始化
     document.addEventListener('DOMContentLoaded', function() {
       updateDateDisplay();
       loadTodayData();
@@ -779,7 +778,17 @@
         navigator.serviceWorker.register('sw.js');
       }
     });
+
+    // 🔥 离线图片预加载
+    window.addEventListener('load', () => {
+      const uniqueImages = [...new Set(literaryQuotes.map(q => q.image))];
+      uniqueImages.forEach(url => {
+        const img = new Image();
+        img.src = url;
+      });
+    });
     
+    // 切换标签
     function switchTab(tab) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -799,15 +808,18 @@
       }
     }
     
+    // 更新日期显示
     function updateDateDisplay() {
       const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
       document.getElementById('currentDateDisplay').textContent = currentDate.toLocaleDateString('zh-CN', options);
     }
     
+    // 渲染统计
     function renderStats() {
       const plans = JSON.parse(localStorage.getItem('plans') || '{}');
       const today = new Date();
       
+      // 计算连续打卡天数
       let streak = 0;
       let checkDate = new Date(today);
       while (true) {
@@ -831,6 +843,7 @@
         document.getElementById('streakContainer').innerHTML = '';
       }
       
+      // 计算总完成任务数
       let totalCompleted = 0;
       Object.values(plans).forEach(day => {
         if (day.tasks) {
@@ -839,6 +852,7 @@
       });
       document.getElementById('totalCompleted').textContent = totalCompleted;
       
+      // 计算本周完成率
       const weekData = getWeekData();
       const weekTotal = weekData.reduce((sum, day) => sum + (day.total || 0), 0);
       const weekCompleted = weekData.reduce((sum, day) => sum + (day.completed || 0), 0);
@@ -847,6 +861,7 @@
       
       updateCircularChart(weekPercent);
       
+      // 计算本月任务数
       const monthStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
       let monthTasks = 0;
       Object.keys(plans).forEach(date => {
@@ -859,6 +874,7 @@
       renderHeatmap();
     }
     
+    // 获取本周数据
     function getWeekData() {
       const today = new Date();
       const weekData = [];
@@ -875,6 +891,7 @@
       return weekData;
     }
     
+    // 更新环形图
     function updateCircularChart(percent) {
       const circle = document.getElementById('completionCircle');
       const text = document.getElementById('completionText');
@@ -882,6 +899,7 @@
       text.textContent = `${percent}%`;
     }
     
+    // 渲染热力图
     function renderHeatmap() {
       const heatmap = document.getElementById('heatmap');
       heatmap.innerHTML = '';
@@ -916,10 +934,12 @@
       }
     }
     
+    // 格式化日期
     function formatDate(date) {
       return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     }
     
+    // 渲染日历
     function renderCalendar() {
       const year = currentMonth.getFullYear();
       const month = currentMonth.getMonth();
@@ -969,6 +989,7 @@
       }
     }
     
+    // 选择日期
     function selectDate(dateStr, day) {
       selectedDate = dateStr;
       const dateObj = new Date(dateStr);
@@ -980,17 +1001,20 @@
       document.getElementById('selectedDateSection').scrollIntoView({ behavior: 'smooth' });
     }
     
+    // 关闭选择日期
     function closeSelectedDate() {
       document.getElementById('selectedDateSection').style.display = 'none';
       selectedDate = null;
       renderCalendar();
     }
     
+    // 切换月份
     function changeMonth(delta) {
       currentMonth.setMonth(currentMonth.getMonth() + delta);
       renderCalendar();
     }
     
+    // 加载今日数据
     function loadTodayData() {
       const today = getTodayStr();
       const data = JSON.parse(localStorage.getItem('plans') || '{}');
@@ -1000,6 +1024,7 @@
       renderTaskList(todayData.tasks || [], 'taskList');
     }
     
+    // 保存心情
     function saveMood() {
       const today = getTodayStr();
       const mood = document.getElementById('todayMood').value;
@@ -1013,6 +1038,7 @@
       localStorage.setItem('plans', JSON.stringify(data));
     }
     
+    // 加载选择日期的数据
     function loadSelectedDateData() {
       if (!selectedDate) return;
       
@@ -1023,6 +1049,7 @@
       renderTaskList(dateData.tasks || [], 'selectedDateTaskList');
     }
     
+    // 保存选择日期的计划
     function saveSelectedDatePlan() {
       if (!selectedDate) return;
       
@@ -1038,6 +1065,7 @@
       renderCalendar();
     }
     
+    // 渲染任务列表
     function renderTaskList(tasks, containerId) {
       const container = document.getElementById(containerId);
       
@@ -1063,6 +1091,7 @@
       `).join('');
     }
     
+    // 添加任务
     function addTask() {
       const input = document.getElementById('taskInput');
       const title = input.value.trim();
@@ -1090,6 +1119,7 @@
       renderStats();
     }
     
+    // 切换任务完成状态
     function toggleTask(index, containerId) {
       const date = containerId === 'taskList' ? getTodayStr() : selectedDate;
       const data = JSON.parse(localStorage.getItem('plans') || '{}');
@@ -1137,19 +1167,20 @@
         this.x = x;
         this.y = y;
         this.color = color;
+        this.size = Math.random() * 2.5 + 1; // 🔥 粒子大小随机
         // 爆炸速度
         const angle = Math.random() * Math.PI * 2;
-        const velocity = Math.random() * 5 + 2;
+        const velocity = Math.random() * 6 + 3; // 🔥 速度加快
         this.vx = Math.cos(angle) * velocity;
         this.vy = Math.sin(angle) * velocity;
         this.alpha = 1;
-        this.decay = Math.random() * 0.015 + 0.01; // 衰减速度
-        this.gravity = 0.05;
+        this.decay = Math.random() * 0.015 + 0.012;
+        this.gravity = 0.06;
       }
 
       update() {
-        this.vx *= 0.98; // 空气阻力
-        this.vy *= 0.98;
+        this.vx *= 0.96; // 空气阻力
+        this.vy *= 0.96;
         this.vy += this.gravity;
         this.x += this.vx;
         this.y += this.vy;
@@ -1160,11 +1191,11 @@
         ctx.save();
         ctx.globalAlpha = this.alpha;
         ctx.beginPath();
-        ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fillStyle = this.color;
         ctx.fill();
-        // 发光效果
-        ctx.shadowBlur = 10;
+        // 🔥 发光效果
+        ctx.shadowBlur = 15;
         ctx.shadowColor = this.color;
         ctx.restore();
       }
@@ -1172,11 +1203,11 @@
 
     // 创建烟花爆炸
     function createExplosion(x, y) {
-      const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#ffd700', '#ff6b6b'];
+      const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#ffd700', '#ff6b6b', '#ffffff'];
       const color = colors[Math.floor(Math.random() * colors.length)];
-      const particleCount = 60; // 粒子数量
+      const count = 120; // 🔥 粒子数量翻倍
       
-      for (let i = 0; i < particleCount; i++) {
+      for (let i = 0; i < count; i++) {
         particles.push(new Particle(x, y, color));
       }
     }
@@ -1188,14 +1219,15 @@
         return;
       }
 
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; // 拖尾效果
+      // 🔥 拖尾效果更明显
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // 随机发射烟花
-      if (fireworksActive && Math.random() < 0.05) {
+      if (fireworksActive && Math.random() < 0.08) {
         createExplosion(
           Math.random() * canvas.width,
-          Math.random() * canvas.height * 0.6 + 100
+          Math.random() * canvas.height * 0.5 + 100
         );
       }
 
@@ -1215,10 +1247,10 @@
       fireworksActive = true;
       particles = [];
       // 初始先放几个
-      for(let i=0; i<3; i++) {
+      for(let i=0; i<4; i++) {
         setTimeout(() => {
-          createExplosion(canvas.width / 2, canvas.height / 3);
-        }, i * 200);
+          createExplosion(canvas.width * (0.2 + Math.random() * 0.6), canvas.height * 0.3);
+        }, i * 150);
       }
       animate();
     }
@@ -1230,26 +1262,29 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    // ================= 业务逻辑 =================
-    
+    // 显示庆祝弹窗
     function showCelebration() {
       const modal = document.getElementById('celebrationModal');
       const quote = getRandomQuote();
+      const img = document.getElementById('celebrationImage');
       
-      document.getElementById('celebrationImage').src = quote.image;
+      img.style.display = 'block'; // 重置显示
+      img.src = quote.image;
       document.getElementById('celebrationQuote').textContent = quote.text;
       document.getElementById('celebrationAuthor').textContent = quote.author;
       
       modal.classList.add('active');
-      startFireworks(); // 启动烟花
+      startFireworks();
     }
     
+    // 关闭庆祝弹窗
     function closeCelebration() {
       const modal = document.getElementById('celebrationModal');
       modal.classList.remove('active');
-      stopFireworks(); // 停止烟花
+      stopFireworks();
     }
     
+    // 保存自定义名言
     function saveCustomQuote() {
       const text = document.getElementById('customQuoteText').value.trim();
       const author = document.getElementById('customQuoteAuthor').value.trim();
@@ -1276,25 +1311,30 @@
       closeCustomQuoteModal();
     }
     
+    // 打开自定义名言弹窗
     function openCustomQuoteModal() {
       document.getElementById('customQuoteModal').classList.add('active');
     }
     
+    // 关闭自定义名言弹窗
     function closeCustomQuoteModal() {
       document.getElementById('customQuoteModal').classList.remove('active');
     }
     
+    // 获取随机名言
     function getRandomQuote() {
       const savedQuotes = JSON.parse(localStorage.getItem('customQuotes') || '[]');
       const allQuotes = [...literaryQuotes, ...savedQuotes];
       return allQuotes[Math.floor(Math.random() * allQuotes.length)];
     }
     
+    // 获取今日字符串
     function getTodayStr() {
       const now = new Date();
       return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     }
     
+    // 处理回车键
     function handleEnter(event) {
       if (event.key === 'Enter') {
         addTask();
@@ -1326,6 +1366,7 @@
       }
     }
     
+    // HTML 转义
     function escapeHtml(text) {
       const div = document.createElement('div');
       div.textContent = text;
